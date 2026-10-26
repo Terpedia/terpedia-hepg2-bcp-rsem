@@ -17,4 +17,6 @@ node report-generator.mjs research/hepg2-bcp-rsem/report-spec.json
 
 The GEO download is checksum pinned and excluded from Git. `restore-inputs.py` checks the download against the report specification. To attach this project to a `terpedia-report` workspace, fork this repository under the same name and use `add_research_project_submodule` with slug `hepg2-bcp-rsem`; the path is `projects/hepg2-bcp-rsem`.
 
+The [raw-run manifest](research/hepg2-bcp-rsem/raw_run_manifest.tsv) maps the six GEO libraries to ENA FASTQs with source-reported lengths and MD5 values for a future integer-count reanalysis. Those reads have not been downloaded or analyzed here.
+
 See the [project methods and interpretation](research/hepg2-bcp-rsem/README.md).
