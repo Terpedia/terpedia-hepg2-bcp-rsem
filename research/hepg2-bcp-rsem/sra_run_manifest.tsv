@@ -1,0 +1,7 @@
+matrix_column	geo_accession	run_accession	sra_url	sra_bytes	sra_md5	expected_reads
+read_count_C1	GSM8491080	SRR30495544	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495544/SRR30495544	1132724346	393380603fb944c48fdcf2f0cebdb4f2	23457098
+read_count_C2	GSM8491081	SRR30495543	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495543/SRR30495543	1132383406	287badee3de8af643bb998a149b14ea1	23405054
+read_count_C3	GSM8491082	SRR30495542	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495542/SRR30495542	1133130725	2ae21f5948012516a29d7b097bc8208a	23414338
+read_count_T1	GSM8491083	SRR30495541	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495541/SRR30495541	1121764149	dce38cc87f9493ff0916de7bfa4e383c	23369393
+read_count_T2	GSM8491084	SRR30495540	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495540/SRR30495540	1127630131	16d3da6be4f1b68fc9c963ce81105f47	23388740
+read_count_T3	GSM8491085	SRR30495539	https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR30495539/SRR30495539	1135241930	07c0ac3f388171dc1cd95870e3fbb844	23406855
