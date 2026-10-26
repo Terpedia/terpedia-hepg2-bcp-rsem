@@ -17,7 +17,7 @@ node report-generator.mjs research/hepg2-bcp-rsem/report-spec.json
 
 The GEO download is checksum pinned and excluded from Git. `restore-inputs.py` checks the download against the report specification. To attach this project to a `terpedia-report` workspace, fork this repository under the same name and use `add_research_project_submodule` with slug `hepg2-bcp-rsem`; the path is `projects/hepg2-bcp-rsem`.
 
-The [raw-run manifest](research/hepg2-bcp-rsem/raw_run_manifest.tsv) maps the six GEO libraries to ENA FASTQs with source-reported lengths and MD5 values for a future integer-count reanalysis. Those reads have not been downloaded or analyzed here.
+The [ENA raw-run manifest](research/hepg2-bcp-rsem/raw_run_manifest.tsv) maps the six GEO libraries to source-reported FASTQs. The [NCBI SRA manifest](research/hepg2-bcp-rsem/sra_run_manifest.tsv) pins the normalized SRA archives selected for retrieval and records Data Locator MD5 values. The saved notebook and report remain descriptive until conversion, alignment, QC, and model outputs are executed and reviewed.
 
 An [unexecuted raw-count notebook](notebooks/terputer-hepg2-bcp-raw-counts.ipynb) now specifies sample QC and a two-arm PyDESeq2 model for the planned STAR count matrix. Its separate [dependency lock](requirements-raw-counts.lock.txt) records the analysis environment. It is a method draft until the downloaded reads, mapping QC, saved outputs, and notebook execution receipt are present; the linked white paper above still reports only the fractional-matrix audit.
 

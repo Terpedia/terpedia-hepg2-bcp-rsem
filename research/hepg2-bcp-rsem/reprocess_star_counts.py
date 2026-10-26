@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from fetch_raw_inputs import DATA, PROJECT, REFERENCE, md5_file
+from convert_sra_to_fastq import sha256_file
 
 
 RESULTS = PROJECT / "results" / "raw_counts"
@@ -68,17 +69,31 @@ def build_index(fasta, gtf):
 
 
 def manifest():
-    with (PROJECT / "raw_run_manifest.tsv").open(newline="") as stream:
+    source_manifest = PROJECT / "sra_run_manifest.tsv"
+    with source_manifest.open(newline="") as stream:
         rows = list(csv.DictReader(stream, delimiter="\t"))
     if len(rows) != 6 or len({row["run_accession"] for row in rows}) != 6:
         raise ValueError("Expected six distinct runs")
-    return rows
+    conversion_path = RESULTS / "conversion_receipt.json"
+    conversion = json.loads(conversion_path.read_text())
+    if (conversion.get("source_manifest_sha256") != sha256_file(source_manifest)
+        or conversion.get("pipeline_sha256") != sha256_file(PROJECT / "convert_sra_to_fastq.py")
+        or len(conversion.get("fastqs", [])) != len(rows)):
+        raise ValueError("SRA conversion receipt does not match the current source files")
+    converted = {entry["run_accession"]: entry for entry in conversion["fastqs"]}
+    if set(converted) != {row["run_accession"] for row in rows}:
+        raise ValueError("SRA conversion receipt does not cover exactly the six runs")
+    return rows, converted
 
 
-def align(row):
+def align(row, converted):
     run = row["run_accession"]
     fastq = DATA / "fastq" / f"{run}.fastq.gz"
-    require_input(fastq, int(row["fastq_bytes"]), row["fastq_md5"])
+    if (not fastq.is_file() or fastq.stat().st_size != converted["fastq_bytes"]
+        or sha256_file(fastq) != converted["fastq_sha256"]
+        or converted["sra_md5"] != row["sra_md5"]
+        or converted["read_count"] != int(row["expected_reads"])):
+        raise ValueError(f"Converted FASTQ is missing or differs from its SRA receipt: {fastq}")
     run_dir = DATA / "star_counts" / run
     run_dir.mkdir(parents=True, exist_ok=True)
     counts = run_dir / "ReadsPerGene.out.tab"
@@ -151,11 +166,11 @@ def main():
         raise ValueError(f"Expected STAR 2.7.11b; found {version}")
     fasta, gtf = reference_files()
     build_index(fasta, gtf)
-    rows = manifest()
+    rows, converted = manifest()
     sample_counts = []
     qc = []
     for row in rows:
-        counts_path, log_path = align(row)
+        counts_path, log_path = align(row, converted[row["run_accession"]])
         sample_counts.append(read_counts(counts_path))
         log = read_log(log_path)
         qc.append({
@@ -193,7 +208,9 @@ def main():
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "aligner": "STAR", "aligner_version": version,
         "pipeline_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "run_manifest_sha256": hashlib.sha256((PROJECT / "raw_run_manifest.tsv").read_bytes()).hexdigest(),
+        "run_manifest_sha256": sha256_file(PROJECT / "sra_run_manifest.tsv"),
+        "conversion_receipt_sha256": sha256_file(RESULTS / "conversion_receipt.json"),
+        "read_source": "NCBI SRA archives converted with fasterq-dump",
         "reference": "GENCODE human release 48 GRCh38 primary assembly",
         "reference_files": {name: {"source_md5": item[2], "bytes": item[1]} for name, item in REFERENCE.items()},
         "index_options": {"sjdbOverhang": 49, "genomeSAsparseD": 3, "genomeSAindexNbases": 12},
@@ -202,7 +219,7 @@ def main():
         "gene_count_column": "STAR ReadsPerGene.out.tab unstranded",
         "gene_count_rows": len(genes),
         "output_sha256": {},
-        "limitations": "Source MD5 checks establish downloaded-file identity but not biological replicate independence, dose accuracy, reference annotation correctness, or gene-level significance.",
+        "limitations": "NCBI SRA and GENCODE MD5 checks establish downloaded-file identity but not biological replicate independence, dose accuracy, reference annotation correctness, or gene-level significance.",
     }
     for name in ("gene_counts_unstranded.tsv", "star_mapping_qc.tsv", "gene_annotation.tsv"):
         receipt["output_sha256"][name] = hashlib.sha256((RESULTS / name).read_bytes()).hexdigest()
