@@ -2,3 +2,4 @@ __pycache__/
 .ipynb_checkpoints/
 research/hepg2-bcp-rsem/data/
 .venv/
+.venv-counts/

@@ -8,6 +8,7 @@ import csv
 import gzip
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -125,6 +126,25 @@ def read_log(path):
     return values
 
 
+def gene_annotation(gtf, genes):
+    annotation = {}
+    pattern = re.compile(r'(gene_id|gene_name|gene_type) "([^"]+)"')
+    with gtf.open() as stream:
+        for line in stream:
+            if line.startswith("#"):
+                continue
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) != 9 or fields[2] != "gene":
+                continue
+            attributes = dict(pattern.findall(fields[8]))
+            gene_id = attributes.get("gene_id")
+            if gene_id in genes:
+                annotation[gene_id] = (attributes.get("gene_name", ""), attributes.get("gene_type", ""))
+    if set(annotation) != genes:
+        raise ValueError(f"GENCODE annotation did not cover {len(genes - set(annotation))} counted genes")
+    return annotation
+
+
 def main():
     version = subprocess.check_output(["STAR", "--version"], text=True).strip()
     if version != "2.7.11b":
@@ -153,6 +173,7 @@ def main():
     genes = set(sample_counts[0])
     if any(set(sample) != genes for sample in sample_counts[1:]):
         raise ValueError("STAR outputs have different gene sets")
+    annotation = gene_annotation(gtf, genes)
     RESULTS.mkdir(parents=True, exist_ok=True)
     with (RESULTS / "gene_counts_unstranded.tsv").open("w", newline="") as stream:
         writer = csv.writer(stream, delimiter="\t")
@@ -163,18 +184,27 @@ def main():
         writer = csv.DictWriter(stream, fieldnames=list(qc[0]), delimiter="\t")
         writer.writeheader()
         writer.writerows(qc)
+    with (RESULTS / "gene_annotation.tsv").open("w", newline="") as stream:
+        writer = csv.writer(stream, delimiter="\t")
+        writer.writerow(["gene_id", "gene_name", "gene_type"])
+        for gene in sorted(genes):
+            writer.writerow([gene, *annotation[gene]])
     receipt = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "aligner": "STAR", "aligner_version": version,
+        "pipeline_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "run_manifest_sha256": hashlib.sha256((PROJECT / "raw_run_manifest.tsv").read_bytes()).hexdigest(),
         "reference": "GENCODE human release 48 GRCh38 primary assembly",
         "reference_files": {name: {"source_md5": item[2], "bytes": item[1]} for name, item in REFERENCE.items()},
+        "index_options": {"sjdbOverhang": 49, "genomeSAsparseD": 3, "genomeSAindexNbases": 12},
+        "mapping_options": {"quantMode": "GeneCounts", "outSAMtype": "None", "readFilesCommand": "zcat"},
         "run_accessions": [row["run_accession"] for row in rows],
         "gene_count_column": "STAR ReadsPerGene.out.tab unstranded",
         "gene_count_rows": len(genes),
         "output_sha256": {},
         "limitations": "Source MD5 checks establish downloaded-file identity but not biological replicate independence, dose accuracy, reference annotation correctness, or gene-level significance.",
     }
-    for name in ("gene_counts_unstranded.tsv", "star_mapping_qc.tsv"):
+    for name in ("gene_counts_unstranded.tsv", "star_mapping_qc.tsv", "gene_annotation.tsv"):
         receipt["output_sha256"][name] = hashlib.sha256((RESULTS / name).read_bytes()).hexdigest()
     (RESULTS / "processing_receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"genes": len(genes), "results": str(RESULTS)}, indent=2))
