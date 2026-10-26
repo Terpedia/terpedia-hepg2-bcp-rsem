@@ -11,3 +11,10 @@ The [paper](https://doi.org/10.3389/fphar.2024.1492670) reports 433 protein-codi
 ## Raw-read reanalysis input
 
 The [raw-run manifest](raw_run_manifest.tsv) maps each GEO sample and matrix column through its BioSample and experiment to one ENA run and one single-end FASTQ. Its six compressed FASTQs total 7,453,487,888 bytes. File lengths and MD5 values came from the [ENA run report](https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA1154682&result=read_run&fields=run_accession,sample_accession,experiment_accession,fastq_ftp,fastq_bytes,fastq_md5&format=tsv), and the GEO-to-BioSample/experiment links came from the [GEO family SOFT record](https://ftp.ncbi.nlm.nih.gov/geo/series/GSE276nnn/GSE276099/soft/GSE276099_family.soft.gz), retrieved 2026-10-26. These are source metadata, not hashes verified from downloaded reads. The FASTQs have not been downloaded or quantified in this project; the executed notebook and report still describe only the deposited fractional matrix.
+
+The reproducible next step uses [fetch_raw_inputs.py](fetch_raw_inputs.py) to download and verify those files and the GENCODE human release 48 primary-assembly FASTA/GTF against [GENCODE MD5SUMS](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_48/MD5SUMS). [reprocess_star_counts.py](reprocess_star_counts.py) then builds a memory-sparse STAR 2.7.11b index with a 49-base splice-junction overhang for the source-reported 50-base single-end reads and writes unstranded integer gene counts plus per-library mapping QC. The scripts keep large input/index files out of Git. Their presence is not evidence that raw-read analysis was completed; results and an executed notebook must be reviewed before replacing any claims in the white paper.
+
+```sh
+python research/hepg2-bcp-rsem/fetch_raw_inputs.py all --workers 6
+python research/hepg2-bcp-rsem/reprocess_star_counts.py
+```
