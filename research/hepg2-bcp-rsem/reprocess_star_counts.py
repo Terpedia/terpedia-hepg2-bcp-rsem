@@ -1,6 +1,7 @@
 """Reprocess the six GSE276099 single-end FASTQs into STAR integer gene counts.
 
-Run fetch_raw_inputs.py all first. Large reference, index, reads, and logs remain
+Run fetch_raw_inputs.py reference, fetch_sra_inputs.py, and
+convert_sra_to_fastq.py first. Large reference, index, reads, and logs remain
 under ignored data/raw; count and mapping-QC tables are written to results.
 """
 
