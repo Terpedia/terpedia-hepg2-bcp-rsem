@@ -1,0 +1,11 @@
+{
+  "matrix_column": "read_count_T2",
+  "geo_accession": "GSM8491084",
+  "run_accession": "SRR30495540",
+  "sra_md5": "16d3da6be4f1b68fc9c963ce81105f47",
+  "fastq_bytes": 1535466369,
+  "fastq_sha256": "27a66d651ba1c93d3b3deb0b9b4bcdeb53f240c8990681cc381bce734955220d",
+  "read_count": 23388740,
+  "compression": "pigz -n -1 -p 4",
+  "compression_version": "pigz 2.8"
+}
