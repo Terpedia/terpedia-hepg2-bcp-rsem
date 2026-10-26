@@ -161,6 +161,20 @@ def gene_annotation(gtf, genes):
     return annotation
 
 
+def compress_result(name):
+    source = RESULTS / name
+    output = RESULTS / f"{name}.gz"
+    temporary = output.with_name(output.name + ".partial")
+    with source.open("rb") as raw, temporary.open("wb") as encoded:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=encoded, mtime=0, compresslevel=6) as compressed:
+            shutil.copyfileobj(raw, compressed, length=1024 * 1024)
+    temporary.replace(output)
+    source.unlink()
+    if output.stat().st_size > 2_000_000:
+        raise ValueError(f"Compressed report input exceeds Terputer's per-file publication limit: {output}")
+    return output
+
+
 def main():
     version = subprocess.check_output(["STAR", "--version"], text=True).strip()
     if version != "2.7.11b":
@@ -205,6 +219,8 @@ def main():
         writer.writerow(["gene_id", "gene_name", "gene_type"])
         for gene in sorted(genes):
             writer.writerow([gene, *annotation[gene]])
+    count_bundle = compress_result("gene_counts_unstranded.tsv")
+    annotation_bundle = compress_result("gene_annotation.tsv")
     receipt = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "aligner": "STAR", "aligner_version": version,
@@ -222,7 +238,7 @@ def main():
         "output_sha256": {},
         "limitations": "NCBI SRA and GENCODE MD5 checks establish downloaded-file identity but not biological replicate independence, dose accuracy, reference annotation correctness, or gene-level significance.",
     }
-    for name in ("gene_counts_unstranded.tsv", "star_mapping_qc.tsv", "gene_annotation.tsv"):
+    for name in (count_bundle.name, "star_mapping_qc.tsv", annotation_bundle.name):
         receipt["output_sha256"][name] = hashlib.sha256((RESULTS / name).read_bytes()).hexdigest()
     (RESULTS / "processing_receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"genes": len(genes), "results": str(RESULTS)}, indent=2))
