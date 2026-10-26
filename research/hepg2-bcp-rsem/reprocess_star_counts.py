@@ -75,6 +75,15 @@ def manifest():
         rows = list(csv.DictReader(stream, delimiter="\t"))
     if len(rows) != 6 or len({row["run_accession"] for row in rows}) != 6:
         raise ValueError("Expected six distinct runs")
+    with (PROJECT / "sample_manifest.tsv").open(newline="") as stream:
+        samples = list(csv.DictReader(stream, delimiter="\t"))
+    sample_index = {row["matrix_column"]: row for row in samples}
+    if len(samples) != 6 or len(sample_index) != 6 or any(
+        row["matrix_column"] not in sample_index
+        or row["geo_accession"] != sample_index[row["matrix_column"]]["geo_accession"]
+        for row in rows
+    ) or sorted(row["arm"] for row in samples) != ["bcp"] * 3 + ["control"] * 3:
+        raise ValueError("SRA runs do not match six GEO sample annotations and treatment arms")
     conversion_path = RESULTS / "conversion_receipt.json"
     conversion = json.loads(conversion_path.read_text())
     if (conversion.get("source_manifest_sha256") != sha256_file(source_manifest)
@@ -226,6 +235,7 @@ def main():
         "aligner": "STAR", "aligner_version": version,
         "pipeline_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "run_manifest_sha256": sha256_file(PROJECT / "sra_run_manifest.tsv"),
+        "sample_manifest_sha256": sha256_file(PROJECT / "sample_manifest.tsv"),
         "conversion_receipt_sha256": sha256_file(RESULTS / "conversion_receipt.json"),
         "read_source": "NCBI SRA archives converted with fasterq-dump",
         "reference": "GENCODE human release 48 GRCh38 primary assembly",
