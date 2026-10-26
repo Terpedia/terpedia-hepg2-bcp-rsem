@@ -19,4 +19,6 @@ The GEO download is checksum pinned and excluded from Git. `restore-inputs.py` c
 
 The [raw-run manifest](research/hepg2-bcp-rsem/raw_run_manifest.tsv) maps the six GEO libraries to ENA FASTQs with source-reported lengths and MD5 values for a future integer-count reanalysis. Those reads have not been downloaded or analyzed here.
 
+An [unexecuted raw-count notebook](notebooks/terputer-hepg2-bcp-raw-counts.ipynb) now specifies sample QC and a two-arm PyDESeq2 model for the planned STAR count matrix. Its separate [dependency lock](requirements-raw-counts.lock.txt) records the analysis environment. It is a method draft until the downloaded reads, mapping QC, saved outputs, and notebook execution receipt are present; the linked white paper above still reports only the fractional-matrix audit.
+
 See the [project methods and interpretation](research/hepg2-bcp-rsem/README.md).

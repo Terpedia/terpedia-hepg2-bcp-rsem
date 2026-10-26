@@ -18,3 +18,5 @@ The reproducible next step uses [fetch_raw_inputs.py](fetch_raw_inputs.py) to do
 python research/hepg2-bcp-rsem/fetch_raw_inputs.py all --workers 6
 python research/hepg2-bcp-rsem/reprocess_star_counts.py
 ```
+
+After mapping QC is reviewed, the [raw-count notebook](../../notebooks/terputer-hepg2-bcp-raw-counts.ipynb) uses PyDESeq2 0.5.4 for a prespecified treatment-only negative-binomial model. It requires a separate Python 3.13 environment, reproducible from [requirements-raw-counts.lock.txt](../../requirements-raw-counts.lock.txt). The notebook is intentionally unexecuted while raw input retrieval and alignment are incomplete; no count-based differential-expression claim has been made.
