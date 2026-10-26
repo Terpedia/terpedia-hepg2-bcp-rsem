@@ -1,10 +1,8 @@
 """Convert six MD5-verified NCBI SRA archives into deterministic gzip FASTQs."""
 
 import csv
-import gzip
 import hashlib
 import json
-import shutil
 import subprocess
 import tempfile
 from datetime import datetime, timezone
@@ -26,6 +24,7 @@ def sha256_file(path):
 
 def main():
     version = subprocess.check_output(["fasterq-dump", "--version"], text=True).strip()
+    compression_version = subprocess.check_output(["pigz", "--version"], text=True).strip()
     with (PROJECT / "sra_run_manifest.tsv").open(newline="") as stream:
         rows = list(csv.DictReader(stream, delimiter="\t"))
     if len(rows) != 6 or len({row["run_accession"] for row in rows}) != 6:
@@ -50,6 +49,8 @@ def main():
                 or existing.get("run_accession") != accession
                 or existing.get("sra_md5") != row["sra_md5"]
                 or existing.get("read_count") != int(row["expected_reads"])
+                or existing.get("compression") != "pigz -n -1 -p 4"
+                or existing.get("compression_version") != compression_version
                 or existing.get("fastq_bytes") != output.stat().st_size
                 or existing.get("fastq_sha256") != sha256_file(output)):
                 raise ValueError(f"Existing FASTQ differs from its conversion receipt: {output}")
@@ -72,20 +73,21 @@ def main():
                 raise ValueError(f"FASTQ record count differs from ENA run metadata for {accession}: {lines // 4}")
             partial = output.with_name(output.name + ".partial")
             with raw.open("rb") as source, partial.open("wb") as encoded:
-                with gzip.GzipFile(filename="", mode="wb", fileobj=encoded, mtime=0, compresslevel=6) as compressed:
-                    shutil.copyfileobj(source, compressed, length=1024 * 1024)
+                subprocess.run(["pigz", "-n", "-1", "-p", "4", "-c"], stdin=source, stdout=encoded, check=True)
             partial.replace(output)
         converted = {
             "matrix_column": row["matrix_column"], "geo_accession": row["geo_accession"],
             "run_accession": accession, "sra_md5": row["sra_md5"],
             "fastq_bytes": output.stat().st_size, "fastq_sha256": sha256_file(output),
             "read_count": int(row["expected_reads"]),
+            "compression": "pigz -n -1 -p 4", "compression_version": compression_version,
         }
         sidecar.write_text(json.dumps(converted, indent=2) + "\n")
         results.append(converted)
     receipt = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "converter": "NCBI fasterq-dump", "converter_version": version,
+        "compression": "pigz -n -1 -p 4", "compression_version": compression_version,
         "source": "NCBI SRA Data Locator normalized SRA archives",
         "source_manifest_sha256": sha256_file(PROJECT / "sra_run_manifest.tsv"),
         "pipeline_sha256": sha256_file(Path(__file__)),
