@@ -1,0 +1,78 @@
+{
+  "generated_at_utc": "2026-10-26T22:47:46.412106+00:00",
+  "converter": "NCBI fasterq-dump",
+  "converter_version": "fasterq-dump : 3.4.1",
+  "compression": "pigz -n -1 -p 4",
+  "compression_version": "pigz 2.8",
+  "source": "NCBI SRA Data Locator normalized SRA archives",
+  "source_manifest_sha256": "7c9212800c557ddc00938750c0fdb181b71b9a81d77deaa7f68c3d4d99b6c163",
+  "pipeline_sha256": "477a103ba6fe251307a9d9a4936162d73e3d86e5261dce3c5ccf755cc3383a4d",
+  "fastqs": [
+    {
+      "matrix_column": "read_count_C1",
+      "geo_accession": "GSM8491080",
+      "run_accession": "SRR30495544",
+      "sra_md5": "393380603fb944c48fdcf2f0cebdb4f2",
+      "fastq_bytes": 1534306214,
+      "fastq_sha256": "d45c90be8541166cce5d12252597cb5c621b508d6a9c65e77086192abb4fe33e",
+      "read_count": 23457098,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    },
+    {
+      "matrix_column": "read_count_C2",
+      "geo_accession": "GSM8491081",
+      "run_accession": "SRR30495543",
+      "sra_md5": "287badee3de8af643bb998a149b14ea1",
+      "fastq_bytes": 1535480740,
+      "fastq_sha256": "6f472464f98b05893909b501a8bf02c54cf156f4f33077d8ca99790db2142788",
+      "read_count": 23405054,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    },
+    {
+      "matrix_column": "read_count_C3",
+      "geo_accession": "GSM8491082",
+      "run_accession": "SRR30495542",
+      "sra_md5": "2ae21f5948012516a29d7b097bc8208a",
+      "fastq_bytes": 1535589316,
+      "fastq_sha256": "1b6948c29924fcb3b1901156743848adea2e00ca75ae9b520b3f1b2b589c5fd7",
+      "read_count": 23414338,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    },
+    {
+      "matrix_column": "read_count_T1",
+      "geo_accession": "GSM8491083",
+      "run_accession": "SRR30495541",
+      "sra_md5": "dce38cc87f9493ff0916de7bfa4e383c",
+      "fastq_bytes": 1529226093,
+      "fastq_sha256": "303bac45cf59af5b0c6a5177be8807311820ab00087887cbfa7b7f8083c3b088",
+      "read_count": 23369393,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    },
+    {
+      "matrix_column": "read_count_T2",
+      "geo_accession": "GSM8491084",
+      "run_accession": "SRR30495540",
+      "sra_md5": "16d3da6be4f1b68fc9c963ce81105f47",
+      "fastq_bytes": 1535466369,
+      "fastq_sha256": "27a66d651ba1c93d3b3deb0b9b4bcdeb53f240c8990681cc381bce734955220d",
+      "read_count": 23388740,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    },
+    {
+      "matrix_column": "read_count_T3",
+      "geo_accession": "GSM8491085",
+      "run_accession": "SRR30495539",
+      "sra_md5": "07c0ac3f388171dc1cd95870e3fbb844",
+      "fastq_bytes": 1537192762,
+      "fastq_sha256": "70ec44b09bd015955dfa7a7ed70ba06ed5211bb00d12c989747ede4dd66fcb72",
+      "read_count": 23406855,
+      "compression": "pigz -n -1 -p 4",
+      "compression_version": "pigz 2.8"
+    }
+  ]
+}
