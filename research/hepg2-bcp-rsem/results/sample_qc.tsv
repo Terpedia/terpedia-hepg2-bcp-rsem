@@ -1,0 +1,7 @@
+matrix_column	geo_accession	arm	treatment_field	total_processed_count	fractional_entries	genes_with_nonzero_value
+read_count_C1	GSM8491080	control	150 uM ethanol	20986136.3300	12588	15733
+read_count_C2	GSM8491081	control	151 uM ethanol	20898201.5000	12729	15616
+read_count_C3	GSM8491082	control	152 uM ethanol	20974381.0800	12753	15598
+read_count_T1	GSM8491083	bcp	150 uM Beta-caryophyllene	21016583.8900	12772	15513
+read_count_T2	GSM8491084	bcp	151 uM Beta-caryophyllene	21071474.7900	12422	15501
+read_count_T3	GSM8491085	bcp	152 uM Beta-caryophyllene	21050266.7900	12566	15419

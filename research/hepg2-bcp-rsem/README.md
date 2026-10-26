@@ -1,0 +1,9 @@
+# Methods and interpretation
+
+GSE276099 was inspected at the GEO series and six sample records. The versioned `sample_manifest.tsv` maps C1–C3 to GSM8491080–GSM8491082 and T1–T3 to GSM8491083–GSM8491085. The common protocol says 150 µM β-caryophyllene or ethanol for 24 h, while the individual treatment fields read 150, 151, and 152 µM by replicate. This project preserves the inconsistency and does not infer actual dosing.
+
+The notebook pins the downloaded supplementary CSV by SHA-256. The analysis excludes rows without a numeric `gene_id` or a complete six-column value. Exactly 20 excluded rows have long gene-set-like IDs and six blank cells; 17,034 numeric-gene rows remain. Their retained values are nonnegative but 75,830 of 102,204 entries are fractional, compatible with processed RSEM-style expected counts. No values are rounded to integer counts.
+
+Each retained sample column is scaled to counts per million (CPM) using its retained-row total. Correlations use log1p(CPM). For descriptive effects, a gene enters when the maximum of the two arm-mean CPMs is at least 1. The reported log2 ratio is `log2((mean_treated_CPM + pseudocount)/(mean_control_CPM + pseudocount))` for pseudocounts 0.1 and 1.0. These thresholds have no p-values and are not a differential-expression analysis. The PGF, NR4A1, CSF1R, ARTN, and CACNA1E values are direct lookups from this filtered matrix, not pathway activity estimates or target-binding assays.
+
+The [paper](https://doi.org/10.3389/fphar.2024.1492670) reports 433 protein-coding DEGs and experiments involving PGF overexpression. Those findings remain source-reported. Resolving the dosing fields and reprocessing original reads with a pinned annotation would be needed before independent inferential comparison. Additional cell contexts and genetic perturbations would be needed to assess context or target dependence.
