@@ -18,7 +18,10 @@ The [NCBI SRA manifest](sra_run_manifest.tsv) is the active retrieval route. It 
 python research/hepg2-bcp-rsem/fetch_raw_inputs.py reference
 python research/hepg2-bcp-rsem/fetch_sra_inputs.py --workers 6
 python research/hepg2-bcp-rsem/convert_sra_to_fastq.py
+python research/hepg2-bcp-rsem/build_star_patched.py
 python research/hepg2-bcp-rsem/reprocess_star_counts.py
 ```
+
+The STAR build pins the 2.7.11b source archive by SHA256 and initializes `transform.outQuant` in the source before compilation. This fixes the [upstream `/geneInfo.tab` GeneCounts bug](https://github.com/alexdobin/STAR/issues/1953) observed on this Apple Silicon host. The processing receipt records the patched binary SHA256. On macOS, the build requires Homebrew GCC 15; on Linux it uses GCC and make.
 
 After mapping QC is reviewed, the [raw-count notebook](../../notebooks/terputer-hepg2-bcp-raw-counts.ipynb) reads the checksum-pinned compressed count and annotation tables, assigns treatment from the GEO sample manifest pinned in the processing receipt, and uses PyDESeq2 0.5.4 for a prespecified treatment-only negative-binomial model. The compressed tables fit the report publisher's per-file limit and retain deterministic gzip headers. It requires a separate Python 3.13 environment, reproducible from [requirements-raw-counts.lock.txt](../../requirements-raw-counts.lock.txt). The notebook is intentionally unexecuted while alignment is incomplete; no count-based differential-expression claim has been made.
