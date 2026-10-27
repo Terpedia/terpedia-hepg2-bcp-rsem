@@ -1,0 +1,15 @@
+{
+  "study_id": "GSE276099",
+  "source_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE276099",
+  "assay": "HepG2 bulk RNA-seq; STAR unstranded GeneCounts; PyDESeq2 0.5.4",
+  "processing_receipt": "research/hepg2-bcp-rsem/results/raw_counts/processing_receipt.json",
+  "execution_receipt": "research/execution-receipts/terputer-hepg2-bcp-raw-counts.json",
+  "contrasts": [
+    {
+      "contrast_id": "GSE276099:beta-caryophyllene-vs-vehicle-raw-counts",
+      "results": "research/hepg2-bcp-rsem/results/raw_counts/deseq2_results.tsv",
+      "artifact_url": "https://github.com/Terpedia/terpedia-hepg2-bcp-rsem/blob/f0e0a56ae1b510fa622a11e218fe6b3b8d2f8d54/research/hepg2-bcp-rsem/results/raw_counts/deseq2_results.tsv",
+      "limitations": "Three labeled libraries per arm from one HepG2 cohort; per-sample dose fields conflict with the common protocol; biological independence and batch structure are not independently verified; expression estimates are not pathway activity, direct target binding, or cross-context replication."
+    }
+  ]
+}

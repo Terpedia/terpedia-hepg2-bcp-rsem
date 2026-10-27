@@ -27,3 +27,16 @@ The STAR build pins the 2.7.11b source archive by SHA256 and initializes `transf
 The [executed raw-count notebook](../../notebooks/terputer-hepg2-bcp-raw-counts.ipynb) reads the checksum-pinned compressed count and annotation tables, assigns treatment from the GEO sample manifest pinned in the processing receipt, and uses PyDESeq2 0.5.4 for a prespecified treatment-only negative-binomial model. The compressed input tables fit the report publisher's per-file limit and retain deterministic gzip headers. The analysis uses a separate Python 3.13 environment, reproducible from [requirements-raw-counts.lock.txt](../../requirements-raw-counts.lock.txt). Its [summary](results/raw_counts/analysis_summary.json) reports 15,078 tested genes, 1,616 with adjusted p below 0.05, and 240 that additionally have absolute log2 fold change at least 1. These are one-cohort model estimates, not cross-context replication or direct target evidence.
 
 To reproduce the model, run `python research/hepg2-bcp-rsem/run_raw_count_notebook.py` from the repository root in that environment, or launch the same script with Terputer's `start_research_job` tool and poll `get_research_job`. The wrapper declares the processing receipt, count tables, QC, manifests, and analysis script as notebook inputs; it declares all analysis tables and the QC figure as outputs. The resulting [execution receipt](../execution-receipts/terputer-hepg2-bcp-raw-counts.json) binds them for report generation and curated gene-effect export. Run `node report-generator.mjs research/hepg2-bcp-rsem/raw-count-report-spec.json` to regenerate the [claim-linked report](../hepg2-bcp-raw-counts/generated/white-paper.md).
+
+## Terpedia gene-effect staging
+
+The [gene-effect source manifest](gene-effects-source.json) names a distinct raw-count contrast and a commit-pinned result TSV. From a Terputer checkout, export the receipt-verified records with:
+
+```sh
+python cloudrun/prepare_gene_effects.py \
+  --project-root /path/to/terpedia-hepg2-bcp-rsem \
+  --manifest /path/to/terpedia-hepg2-bcp-rsem/research/hepg2-bcp-rsem/gene-effects-source.json \
+  --out /path/to/gene-effects-GSE276099.jsonl
+```
+
+The reviewed local export contains 15,078 gene rows for `GSE276099:beta-caryophyllene-vs-vehicle-raw-counts` and has SHA-256 `33c609ad39811e9bfd9676b3dae821452c0139343ae3af0ecf6b3109320e4349`. The JSONL is derived from the versioned result table and is kept outside Git. It has **not** been loaded into BigQuery; the curated contrast row and warehouse access must be in place before loading.
