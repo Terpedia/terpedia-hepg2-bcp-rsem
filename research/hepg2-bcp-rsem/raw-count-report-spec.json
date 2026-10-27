@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "slug": "hepg2-bcp-raw-counts",
+  "title": "β-Caryophyllene in HepG2: raw-read reprocessing and a count-based contrast",
+  "question": "Which metabolic and signaling responses to terpene exposure are reproducible, and which depend on cellular context or a specific target?",
+  "notebook": "notebooks/terputer-hepg2-bcp-raw-counts.ipynb",
+  "execution_receipt": "research/execution-receipts/terputer-hepg2-bcp-raw-counts.json",
+  "sources": [
+    {"id": "geo", "title": "GEO GSE276099 series and sample records", "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE276099"},
+    {"id": "ena", "title": "ENA run report for PRJNA1154682", "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA1154682&result=read_run&fields=run_accession,sample_accession,experiment_accession,fastq_ftp,fastq_bytes,fastq_md5&format=tsv"},
+    {"id": "gencode", "title": "GENCODE human release 48", "url": "https://www.gencodegenes.org/human/release_48.html"},
+    {"id": "paper", "title": "Basheer et al., β-caryophyllene and MAPK signaling in HCC (2024)", "url": "https://doi.org/10.3389/fphar.2024.1492670"}
+  ],
+  "claims": [
+    {
+      "id": "R01", "class": "source-reported",
+      "text": "GSE276099 labels three HepG2 ethanol-vehicle and three β-caryophyllene bulk RNA-seq libraries. Its common protocol says 150 µM for 24 hours, whereas individual treatment fields list 150, 151, and 152 µM in replicate order for both arms.",
+      "sources": ["geo"],
+      "limitation": "The archive does not resolve the dose-field discrepancy or establish independent biological replication."
+    },
+    {
+      "id": "R02", "class": "observed",
+      "text": "Six downloaded SRA runs were converted to FASTQ and aligned to the GENCODE v48 GRCh38 primary assembly. Each library has 23.37–23.46 million input reads and 85.80–86.36% uniquely mapped reads; the unstranded integer count matrix contains 78,894 genes.",
+      "sources": ["geo", "ena", "gencode"],
+      "artifacts": ["research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_qc.tsv", "research/hepg2-bcp-rsem/results/raw_counts/analysis_summary.json"],
+      "limitation": "Read identity and mapping QC do not establish the true dose, biological replicate independence, or the absence of batch effects."
+    },
+    {
+      "id": "R03", "class": "observed",
+      "text": "A prespecified PyDESeq2 0.5.4 negative-binomial model comparing β-caryophyllene with vehicle tested 15,078 genes after requiring at least 10 raw counts in at least three libraries. Of these, 1,616 have Benjamini–Hochberg adjusted p below 0.05, including 240 with absolute log2 fold change at least 1.",
+      "sources": ["geo", "ena"],
+      "artifacts": ["research/hepg2-bcp-rsem/results/raw_counts/analysis_summary.json", "research/hepg2-bcp-rsem/results/raw_counts/deseq2_results.tsv"],
+      "limitation": "These are model-based estimates for one labeled HepG2 cohort, not evidence of reproducibility across experiments, pathways, or cellular contexts."
+    },
+    {
+      "id": "R04", "class": "observed",
+      "text": "The five prespecified genes all have adjusted p below 0.05 in this contrast: NR4A1 (+0.737 log2 fold change), CSF1R (+1.615), CACNA1E (−1.178), ARTN (−0.674), and PGF (−1.174).",
+      "sources": ["geo", "ena", "paper"],
+      "artifacts": ["research/hepg2-bcp-rsem/results/raw_counts/prespecified_genes.tsv"],
+      "limitation": "Gene-expression associations do not establish MAPK activity, direct target binding, or causal mediation by these genes."
+    },
+    {
+      "id": "R05", "class": "observed",
+      "text": "PDK4 has an estimated +1.153 log2 fold change and adjusted p of 3.71×10⁻¹⁹ in the raw-count contrast; the six libraries' off-diagonal Spearman correlations of log2(CPM+1) range from 0.8743 to 0.8859.",
+      "sources": ["geo", "ena"],
+      "artifacts": ["research/hepg2-bcp-rsem/results/raw_counts/deseq2_results.tsv", "research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_correlations.tsv", "research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_correlations.png"],
+      "limitation": "A PDK4 transcript estimate is not a measured metabolic flux or a pathway-enrichment result; correlations do not certify sample independence."
+    },
+    {
+      "id": "R06", "class": "source-reported",
+      "text": "The source article reports 433 protein-coding DEGs and a PGF/MAPK-related response, including a PGF overexpression experiment that changed β-caryophyllene sensitivity.",
+      "sources": ["paper", "geo"],
+      "limitation": "The source model, gene universe, and functional experiment were not reproduced here; the different DEG totals must not be treated as a direct disagreement without matching methods."
+    },
+    {
+      "id": "R07", "class": "proposed",
+      "text": "Reconcile the source article's 433-DEG result against this raw-count model by matching its gene universe, annotation, filter, contrast, and statistical method; clarify the dose metadata and biological replicate structure with the depositors.",
+      "sources": ["geo", "paper"],
+      "limitation": "The present count-based analysis does not explain the difference in DEG totals."
+    },
+    {
+      "id": "R08", "class": "proposed",
+      "text": "Compare the named HepG2 effects with vehicle-matched β-caryophyllene data in another cellular context, then perturb candidate regulators in a matched chemical-by-genetic experiment before asserting a reproducible or target-dependent response.",
+      "sources": ["geo", "paper"],
+      "limitation": "This six-library cohort contains one cell line and no genetic perturbation."
+    }
+  ],
+  "abstract": ["R02", "R03", "R04"],
+  "sections": {
+    "background": ["R01", "R06"],
+    "methods": ["R02", "R03"],
+    "results": ["R03", "R04", "R05"],
+    "interpretation": ["R04", "R05", "R06"],
+    "limitations": ["R01", "R03", "R04", "R06"],
+    "next_steps": ["R07", "R08"]
+  }
+}

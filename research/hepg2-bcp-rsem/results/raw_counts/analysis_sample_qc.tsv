@@ -1,0 +1,7 @@
+matrix_column	geo_accession	run_accession	input_reads	uniquely_mapped_reads	uniquely_mapped_percent	multi_mapped_percent	too_many_loci_percent	unmapped_too_short_percent	condition	counted_reads	detected_genes
+read_count_C1	GSM8491080	SRR30495544	23457098	20128716	85.81%	12.75%	0.38%	1.01%	vehicle	17364362	27358
+read_count_C2	GSM8491081	SRR30495543	23405054	20082332	85.80%	12.80%	0.37%	0.99%	vehicle	17363605	26839
+read_count_C3	GSM8491082	SRR30495542	23414338	20157768	86.09%	12.58%	0.36%	0.93%	vehicle	17413923	26797
+read_count_T1	GSM8491083	SRR30495541	23369393	20119696	86.09%	12.59%	0.33%	0.94%	bcp	17471515	26214
+read_count_T2	GSM8491084	SRR30495540	23388740	20095240	85.92%	12.78%	0.34%	0.92%	bcp	17457733	26342
+read_count_T3	GSM8491085	SRR30495539	23406855	20213877	86.36%	12.37%	0.32%	0.91%	bcp	17588935	26013

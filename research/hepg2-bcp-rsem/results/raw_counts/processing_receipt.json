@@ -1,0 +1,52 @@
+{
+  "generated_at_utc": "2026-10-27T03:30:49.285831+00:00",
+  "aligner": "STAR",
+  "aligner_version": "2.7.11b",
+  "aligner_binary_sha256": "f0c085c6762182fc10e457a7d3b99c06d1497a2ea18f8e5db6f647364c2d192a",
+  "aligner_source_patch": "Initialize ParametersGenome::transform.outQuant=false (STAR issue 1953)",
+  "pipeline_sha256": "20a0d265aad625cb0f39ffeb78703b2a72282cc6141fcee0dbbb8d11731564de",
+  "run_manifest_sha256": "7c9212800c557ddc00938750c0fdb181b71b9a81d77deaa7f68c3d4d99b6c163",
+  "sample_manifest_sha256": "94a3061f3d13f21c2c722eb6c3c9fe14e47c9dc765bc51d02a7aac17cf8caee6",
+  "conversion_receipt_sha256": "aa5ffd1ba42c43ef67374f3e001dee6384c77ab8d975dbbf9aca20f0972009ad",
+  "read_source": "NCBI SRA archives converted with fasterq-dump",
+  "reference": "GENCODE human release 48 GRCh38 primary assembly",
+  "reference_files": {
+    "GRCh38.primary_assembly.genome.fa.gz": {
+      "source_md5": "42e38e8dd5027dd2ae8aeb8f3a990d07",
+      "bytes": 845635028
+    },
+    "gencode.v48.primary_assembly.annotation.gtf.gz": {
+      "source_md5": "1b68ecb47fd4cc3946819fec58a59d8f",
+      "bytes": 59094311
+    }
+  },
+  "index_options": {
+    "sjdbOverhang": 49,
+    "genomeSAsparseD": 8,
+    "genomeSAindexNbases": 12,
+    "runThreadN": 2,
+    "limitGenomeGenerateRAM": 12000000000
+  },
+  "index_parameters_sha256": "e4a1037104f738c58d1bd913bc3713f1299ada3563d4f6d0b5d72330d07609df",
+  "mapping_options": {
+    "quantMode": "GeneCounts",
+    "outSAMtype": "None",
+    "readFilesCommand": "gunzip -c"
+  },
+  "run_accessions": [
+    "SRR30495544",
+    "SRR30495543",
+    "SRR30495542",
+    "SRR30495541",
+    "SRR30495540",
+    "SRR30495539"
+  ],
+  "gene_count_column": "STAR ReadsPerGene.out.tab unstranded",
+  "gene_count_rows": 78894,
+  "output_sha256": {
+    "gene_counts_unstranded.tsv.gz": "bbd62a10a3cb8ba602ef8dc8b04c5ebbd7b5194686ad6906d01400ad14c50a3c",
+    "star_mapping_qc.tsv": "c2a6a88df7f6a710fb07e9343945a300772c48dafbabcd426e811072fff75b8a",
+    "gene_annotation.tsv.gz": "692523a71ccd982975d3c6e723171a9671139fe57bfb95522b35d9031f56b76d"
+  },
+  "limitations": "NCBI SRA and GENCODE MD5 checks establish downloaded-file identity but not biological replicate independence, dose accuracy, reference annotation correctness, or gene-level significance."
+}

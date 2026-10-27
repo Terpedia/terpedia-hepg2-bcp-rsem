@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "generator": "terputer-report-generator-v2",
+  "specification_schema_version": 2,
+  "manifest": "research/hepg2-bcp-rsem/raw-count-report-spec.json",
+  "manifest_sha256": "43b07efd561064c984085cf22a04a90b6dcf5cf60cceb49c6e3dee3ddc5f9d22",
+  "notebook": "notebooks/terputer-hepg2-bcp-raw-counts.ipynb",
+  "notebook_sha256": "c66355c61bd3542a89aa66873e9296b629c791f3af12166aa158fb866c01793e",
+  "executed_code_cells": 4,
+  "notebook_execution_receipt": "research/execution-receipts/terputer-hepg2-bcp-raw-counts.json",
+  "notebook_execution_receipt_sha256": "dddee79aaac5e63546f716c7a77e79fb39c4f030e50d1bd65d2037a602e9dbd7",
+  "artifact_sha256": {
+    "research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_correlations.png": "b1a4d8d8114fd19b33dd9b973ee0aefdbeeeed0b6b51d88b84fc77363b37ef99",
+    "research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_correlations.tsv": "a4ca1dd8c859b6fb9887499c1f23efdd1e6f0888fbaf5e46636be0115ea5532a",
+    "research/hepg2-bcp-rsem/results/raw_counts/analysis_sample_qc.tsv": "86bd92d5b74f987c4df7f996ab3b1cbb59e5fa04e204b24ee03dd6e6f26d86e3",
+    "research/hepg2-bcp-rsem/results/raw_counts/analysis_summary.json": "782fb08a48839a86b6e722a0a20d172c040508849a1e5572de397b2f49b474c2",
+    "research/hepg2-bcp-rsem/results/raw_counts/deseq2_results.tsv": "af2559428959ff5b366bf3899d37da1cd1d87d9ddc8f0eb33a19077d685585ef",
+    "research/hepg2-bcp-rsem/results/raw_counts/prespecified_genes.tsv": "6cafa3781018181caa052c16ec562ea148f93f51ead89ad9dcee1f08b88c5237"
+  },
+  "input_sha256": {
+    "research/hepg2-bcp-rsem/reprocess_star_counts.py": "20a0d265aad625cb0f39ffeb78703b2a72282cc6141fcee0dbbb8d11731564de",
+    "research/hepg2-bcp-rsem/results/raw_counts/conversion_receipt.json": "aa5ffd1ba42c43ef67374f3e001dee6384c77ab8d975dbbf9aca20f0972009ad",
+    "research/hepg2-bcp-rsem/results/raw_counts/gene_annotation.tsv.gz": "692523a71ccd982975d3c6e723171a9671139fe57bfb95522b35d9031f56b76d",
+    "research/hepg2-bcp-rsem/results/raw_counts/gene_counts_unstranded.tsv.gz": "bbd62a10a3cb8ba602ef8dc8b04c5ebbd7b5194686ad6906d01400ad14c50a3c",
+    "research/hepg2-bcp-rsem/results/raw_counts/processing_receipt.json": "47d46f4bf172ca9bbe76194d02a815442005e3277e76bcebf949f4eccad81662",
+    "research/hepg2-bcp-rsem/results/raw_counts/star_mapping_qc.tsv": "c2a6a88df7f6a710fb07e9343945a300772c48dafbabcd426e811072fff75b8a",
+    "research/hepg2-bcp-rsem/sample_manifest.tsv": "94a3061f3d13f21c2c722eb6c3c9fe14e47c9dc765bc51d02a7aac17cf8caee6",
+    "research/hepg2-bcp-rsem/sra_run_manifest.tsv": "7c9212800c557ddc00938750c0fdb181b71b9a81d77deaa7f68c3d4d99b6c163"
+  },
+  "claim_count": 8,
+  "observed_claim_count": 4,
+  "report_sha256": "39c71cf336ae6c5a3bc6599f057d807878eaffb8cdd28e0153f590b70fe0792c",
+  "ledger_sha256": "489811331eecb9c9a42b131f76a3e009328877f78e46c2f359bba4d3292dfcc1",
+  "limits": "Checks source URL syntax, local artifact presence, notebook execution metadata, and provenance; version 2 specifications also bind a recorded run to the notebook, observed-claim artifact hashes, and any declared local input hashes. Does not verify that a notebook read every declared input, live URL reachability, biological replication, or claim truth."
+}
